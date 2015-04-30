@@ -24,8 +24,9 @@ if ($decoded->function == 'login') {
     getUserByEmail($decoded->email);
 } else if ($decoded->function == 'resetPassword') {
     resetPassword($decoded->user, $decoded->new_password);
+} else if ($decoded->function == 'getUserByEmailAndPassword') {
+    getUserByEmailAndPassword($decoded->email, $decoded->password);
 }
-
 
 function login($username, $password)
 {
@@ -149,4 +150,27 @@ function resetPassword($user, $new_password)
     } else {
         echo json_encode(false);
     }
+}
+
+function getUserByEmailAndPassword($email, $password)
+{
+    //Instancio la conexion con la DB
+    $db = new MysqliDb();
+    //Armo el filtro por email
+    $db->where("email", $email);
+    //Que me retorne el usuario filtrando por email
+    $results = $db->get("usuarios");
+
+    $hash = $results[0]['password'];
+
+    if (password_verify($password, $hash)) {
+        //Serializo el resultado
+        $response = ['user' => json_encode($results[0])];
+    }
+    else {
+        $response = ['user' => json_encode(null)];
+    }
+
+    //retorno el resultado serializado
+    echo json_encode($response);
 }

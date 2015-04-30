@@ -54,7 +54,7 @@
                     RecoveryService.getUser($scope.signup.email, function(data){
                         if(data.user != "null") {
                             var new_password = GenerateRandomPassword();
-                            console.log(new_password);
+                            //console.log(new_password);
                             RecoveryService.resetPassword(data.user, new_password, function(result){
                                 if(result == "true") {
                                     //sendPassword($scope.signup.email, new_password);
@@ -200,14 +200,14 @@
          */
         function sendPassword(email, new_password, callback) {
             var mensaje = "Recibís este correo porque solicitaste recuperar tu contraseña.\n" +
-                    "Te eviamos a continuación la siguiente contraseña.\n\n" +
+                    "Te enviamos a continuación la siguiente contraseña.\n\n" +
                     "Nueva Contraseña: " + new_password + "\n\n" +
-                    "Puedes cambiar tu contraseña haciendo click sobre el siguiente link \n" +
-                    "http://192.185.67.199/~arielces/playground/login/#/changepwd \n" +
-                    "El cambio debe ser efectuado dentro de los proximos 10 minutos, caso contrario su contraseña no tendra validez y debera generar una nueva  \n" +
+                    "Puedes cambiar tu contraseña haciendo click sobre el siguiente link \n\n" +
+                    "http://192.185.67.199/~arielces/playground/login/#/changepwd \n\n" +
+                    "El cambio debe ser efectuado dentro de los proximos 10 minutos, caso contrario su contraseña no tendra validez y debera generar una nueva.  \n\n" +
                     "Saludos";
 
-            console.log(mensaje);
+            //console.log(mensaje);
             return $http.post('./recovery-pwd/send-pwd.php',
                 {
                     'email': email,

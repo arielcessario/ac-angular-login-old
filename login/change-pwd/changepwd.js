@@ -30,10 +30,12 @@
     function ChangePwdCtrl(ChangePwdService, $scope, $location, toastr) {
 
         // Variables
-        $scope.email = '';
-        $scope.password = '';
-        $scope.password_1 = '';
-        $scope.password_2 = '';
+        $scope.vm = {
+            email: 'mmaneff@gmail.com',
+            password: '',
+            password_1: '',
+            password_2: ''
+        };
 
         // Function Declarations
         //asigno la funcion a una variable
@@ -43,25 +45,32 @@
          * Envia un mail para recuperar la Password o bien para tener una nueva
          */
         function changePassword() {
+            console.log($scope.vm.email);
             ///Valido que ingrese las 3 contraseñas
-            if($scope.email !== '' && $scope.password !== '' && $scope.password_1 !== '' && $scope.password_2 !== '') {
-                if (ValidateEmail($scope.signup.email)) {
-                    ///Verifico que la contraseña ingresada sea valida y que no caduco
-                    ChangePwdService.validatePassword($scope.email, $scope.password, function (data) {
-                        if (data.isValid == "true") {
-                            ChangePwdService.savePassword(data.user, $scope.password_1, function (result) {
-                                if (result == "true") {
-                                    toastr.success('La contrase&ntilde;a fue modificada satisfactoriamente');
-                                }
-                                else {
-                                    toastr.error('Se produjo un error guardando la nueva contrase&ntilde;a');
-                                }
-                            });
-                        }
-                        else {
-                            toastr.error('La contrase&ntilde;a ingresada expiro. Por favor genere una nueva.');
-                        }
-                    });
+            if($scope.vm.email !== '' && $scope.vm.password !== '' && $scope.vm.password_1 !== '' && $scope.vm.password_2 !== '') {
+                if (ValidateEmail($scope.vm.email)) {
+                    if($scope.vm.password_1 === $scope.vm.password_2) {
+                        ///Verifico que la contraseña ingresada sea valida y que no caduco
+                        ChangePwdService.validatePassword($scope.vm.email, $scope.vm.password, function (data) {
+                            console.log(data);
+                            if (data.isValid == "true") {
+                                ChangePwdService.savePassword(data.user, $scope.vm.password_1, function (result) {
+                                    if (result == "true") {
+                                        toastr.success('La contrase&ntilde;a fue modificada satisfactoriamente');
+                                    }
+                                    else {
+                                        toastr.error('Se produjo un error guardando la nueva contrase&ntilde;a');
+                                    }
+                                });
+                            }
+                            else {
+                                toastr.error(data.message);
+                            }
+                        });
+                    }
+                    else {
+                        toastr.error('Las contraseñas nuevas no son iguales. Por favor ingrese las mismas contraseñas');
+                    }
                 }
                 else {
                     toastr.error('Por favor ingrese una direccion de Mail valida');
@@ -109,28 +118,30 @@
         function validatePassword(email, password, callback) {
             return $http.post('./login-api/user.php',
                 {
-                    'function': 'getUserByEmail',
-                    'email': email
+                    'function': 'getUserByEmailAndPassword',
+                    'email': email,
+                    'password': password
                 })
                 .success(function (data) {
-                    //console.log(data);
                     if (data) {
                         var user = JSON.parse(data.user);
-                        if(user.password == password) {
-                            var minutes = getMinutes(user.passwordExpirationDate, new Date());
-                            if(minutes < 10) {
-                                data.isValid = true;
-                            }
-                            else {
-                                data.isValid = false;
-                                data.message = "Su contraseña expiro. Por favor genere una nueva contraseña";
-                            }
+                        data.isValid = true;
+                        /*
+                        var minutes = getMinutes(user.passwordExpirationDate, new Date());
+                        if(minutes < 10) {
+                            data.isValid = true;
                         }
                         else {
                             data.isValid = false;
-                            data.message = "La contraseña ingresada no coinciden";
+                            data.message = "Su contraseña expiro. Por favor genere una nueva contraseña";
                         }
+                        */
+
                         callback(data);
+                    }
+                    else {
+                        data.isValid = false;
+                        data.message = "La Contraseña Actual ingresada no concuerda con la existente. Por favor ingresela nuevamente";
                     }
                 })
                 .error()
