@@ -28,34 +28,33 @@
      * @constructor
      */
     function ChangePwdCtrl(ChangePwdService, $scope, $location, toastr) {
+        // Functions
+        var vm = this;
 
         // Variables
-        $scope.vm = {
-            email: 'mmaneff@gmail.com',
-            password: '',
-            password_1: '',
-            password_2: ''
-        };
+        vm.email = '';
+        vm.password = '';
+        vm.password_1 = '';
+        vm.password_2 = '';
 
         // Function Declarations
         //asigno la funcion a una variable
-        $scope.changePassword = changePassword;
+        vm.changePassword = changePassword;
 
         /**
          * Envia un mail para recuperar la Password o bien para tener una nueva
          */
         function changePassword() {
-
+            console.log(vm.email);
             ///Valido que ingrese las 3 contraseñas
-            if($scope.vm.email !== '' && $scope.vm.password !== '' && $scope.vm.password_1 !== '' && $scope.vm.password_2 !== '') {
-                if (ValidateEmail($scope.vm.email)) {
-                    if($scope.vm.password_1 === $scope.vm.password_2) {
+            if(vm.email !== '' && vm.password !== '' && vm.password_1 !== '' && vm.password_2 !== '') {
+                if (ValidateEmail(vm.email)) {
+                    if(vm.password_1 === vm.password_2) {
                         ///Verifico que la contraseña ingresada sea valida y que no caduco
-                        ChangePwdService.validatePassword($scope.vm.email, $scope.vm.password, function (data) {
-                            //console.log(data);
-                            if (data != "true") {
-                                console.log('Es valido');
-                                ChangePwdService.savePassword(data.user, $scope.vm.password_1, function (result) {
+                        ChangePwdService.validatePassword(vm.email, vm.password, function (data) {
+                            console.log(data);
+                            if (data.isValid == "true") {
+                                ChangePwdService.savePassword(data.user, vm.password_1, function (result) {
                                     if (result == "true") {
                                         toastr.success('La contrase&ntilde;a fue modificada satisfactoriamente');
                                     }
