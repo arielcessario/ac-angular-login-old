@@ -1,0 +1,58 @@
+<form ng-controller="CrearCtrl as crearCtrl"
+      name="userForm" novalidate>
+
+    <div>Nombre<br>
+        <input type="text" name="nombre" ng-model="crearCtrl.nombre" ng-maxlength="45" required>
+        <span style="color:red" ng-show="userForm.nombre.$dirty && userForm.nombre.$invalid">
+            <span ng-show="userForm.nombre.$error.required">Debe ingresar un Nombre</span>
+            <span ng-show="userForm.password.$error.maxlength">El Nombre es demasiado largo (Máximo 45)</span>
+        </span>
+    </div>
+
+    <div>Apellido<br>
+        <input type="text" name="apellido" ng-model="crearCtrl.apellido" ng-maxlength="45" required>
+        <span style="color:red" ng-show="userForm.apellido.$dirty && userForm.apellido.$invalid">
+            <span ng-show="userForm.apellido.$error.required">Apellido es obligatorio</span>
+            <span ng-show="userForm.password.$error.maxlength">El Apellido es demasiado largo (Máximo 45)</span>
+        </span>
+    </div>
+
+    <div>Nombre de Usuario<br>
+        <input type="text" name="username" ng-model="crearCtrl.username" ng-maxlength="45" required>
+        <span style="color:red" ng-show="userForm.username.$dirty && userForm.username.$invalid">
+            <span ng-show="userForm.username.$error.required">usernamename es obligatorio</span>
+            <span ng-show="userForm.password.$error.maxlength">El Nombre de usuario es demasiado largo (Máximo 45)</span>
+        </span>
+    </div>
+
+    <div>Password<br>
+        <input type="password" name="password" ng-model="crearCtrl.password" ng-maxlength="60" required>
+        <span style="color:red" ng-show="userForm.password.$dirty && userForm.password.$invalid">
+            <span ng-show="userForm.password.$error.required">Password es obligatorio</span>
+            <span ng-show="userForm.password.$error.maxlength">El Password es demasiado largo (Máximo 60)</span>
+        </span>
+    </div>
+
+    <div>Confirmar Password<br>
+        <input type="password" name="password_repeat" ng-model="crearCtrl.password_repeat"
+               ng-maxlength="60" required>
+        <span style="color:red" ng-show="(userForm.password_repeat.$dirty && userForm.password_repeat.$invalid) ||
+        crearCtrl.password_repeat !== crearCtrl.password">
+            <span ng-show="userForm.password_repeat.$error.required">password_repeatname is required.</span>
+            <span ng-show="crearCtrl.password_repeat !== crearCtrl.password">El password no coincide</span>
+        </span>
+    </div>
+
+
+    <div>
+        <!--<input type="submit"-->
+        <!--ng-disabled="userForm.user.$dirty && userForm.user.$invalid ||-->
+        <!--userForm.email.$dirty && userForm.email.$invalid">-->
+        <input type="submit" ng-click="crearCtrl.create();"
+               ng-disabled="userForm.$invalid">
+    </div>
+    
+    
+    <div ng-click="crearCtrl.test();">test</div>
+
+</form>
