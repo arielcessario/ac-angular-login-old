@@ -23,7 +23,7 @@ if ($decoded->function == 'login') {
 } else if ($decoded->function == 'getUserByEmail') {
     getUserByEmail($decoded->email);
 } else if ($decoded->function == 'resetPassword') {
-    resetPassword($decoded->user, $decoded->new_password);
+    resetPassword($decoded->user, $decoded->new_password, $decoded->changepwd);
 } else if ($decoded->function == 'getUserByEmailAndPassword') {
     getUserByEmailAndPassword($decoded->email, $decoded->password);
 }
@@ -135,14 +135,15 @@ function getUserByEmail($email)
     echo json_encode($response);
 }
 
-function resetPassword($user, $new_password)
+function resetPassword($user, $new_password, $changepwd)
 {
     $db = new MysqliDb();
     $user_decoded = json_decode($user);
     $options = ['cost' => 12];
     $password = password_hash($new_password, PASSWORD_BCRYPT, $options);
 
-    $data = array('password' => $password);
+    $data = array('password' => $password,
+        'changepwd' => $changepwd);
 
     $db->where('usuario_id', $user_decoded->usuario_id);
     if ($db->update('usuarios', $data)) {

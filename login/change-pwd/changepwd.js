@@ -45,15 +45,16 @@
          * Envia un mail para recuperar la Password o bien para tener una nueva
          */
         function changePassword() {
-            console.log($scope.vm.email);
+
             ///Valido que ingrese las 3 contraseñas
             if($scope.vm.email !== '' && $scope.vm.password !== '' && $scope.vm.password_1 !== '' && $scope.vm.password_2 !== '') {
                 if (ValidateEmail($scope.vm.email)) {
                     if($scope.vm.password_1 === $scope.vm.password_2) {
                         ///Verifico que la contraseña ingresada sea valida y que no caduco
                         ChangePwdService.validatePassword($scope.vm.email, $scope.vm.password, function (data) {
-                            console.log(data);
-                            if (data.isValid == "true") {
+                            //console.log(data);
+                            if (data != "true") {
+                                console.log('Es valido');
                                 ChangePwdService.savePassword(data.user, $scope.vm.password_1, function (result) {
                                     if (result == "true") {
                                         toastr.success('La contrase&ntilde;a fue modificada satisfactoriamente');
@@ -124,24 +125,7 @@
                 })
                 .success(function (data) {
                     if (data) {
-                        var user = JSON.parse(data.user);
-                        data.isValid = true;
-                        /*
-                        var minutes = getMinutes(user.passwordExpirationDate, new Date());
-                        if(minutes < 10) {
-                            data.isValid = true;
-                        }
-                        else {
-                            data.isValid = false;
-                            data.message = "Su contraseña expiro. Por favor genere una nueva contraseña";
-                        }
-                        */
-
                         callback(data);
-                    }
-                    else {
-                        data.isValid = false;
-                        data.message = "La Contraseña Actual ingresada no concuerda con la existente. Por favor ingresela nuevamente";
                     }
                 })
                 .error()
@@ -158,10 +142,11 @@
                 {
                     'function': 'resetPassword',
                     'user': user,
-                    'password': password
+                    'password': password,
+                    'changepwd': '0'
                 })
                 .success(function (data) {
-                    //console.log(data);
+                    console.log(data);
                     if (data) {
                         callback(data);
                     }

@@ -180,7 +180,8 @@
                 {
                     'function': 'resetPassword',
                     'user': user,
-                    'new_password': new_password
+                    'new_password': new_password,
+                    'changepwd': '1'
                 })
                 .success(function (data) {
                     //console.log(data);
@@ -204,7 +205,7 @@
                     "Nueva Contraseña: " + new_password + "\n\n" +
                     "Puedes cambiar tu contraseña haciendo click sobre el siguiente link \n\n" +
                     "http://192.185.67.199/~arielces/playground/login/#/changepwd \n\n" +
-                    "El cambio debe ser efectuado dentro de los proximos 10 minutos, caso contrario su contraseña no tendra validez y debera generar una nueva.  \n\n" +
+                    "La contraseña enviada es temporal y debera generar una nueva.  \n\n" +
                     "Saludos";
 
             //console.log(mensaje);
