@@ -45,15 +45,14 @@
          * Envia un mail para recuperar la Password o bien para tener una nueva
          */
         function changePassword() {
-            console.log(vm.email);
+
             ///Valido que ingrese las 3 contraseñas
             if(vm.email !== '' && vm.password !== '' && vm.password_1 !== '' && vm.password_2 !== '') {
                 if (ValidateEmail(vm.email)) {
                     if(vm.password_1 === vm.password_2) {
                         ///Verifico que la contraseña ingresada sea valida y que no caduco
                         ChangePwdService.validatePassword(vm.email, vm.password, function (data) {
-                            console.log(data);
-                            if (data.isValid == "true") {
+                            if (data != "true") {
                                 ChangePwdService.savePassword(data.user, vm.password_1, function (result) {
                                     if (result == "true") {
                                         toastr.success('La contrase&ntilde;a fue modificada satisfactoriamente');
