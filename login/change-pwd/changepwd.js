@@ -52,9 +52,11 @@
                     if(vm.password_1 === vm.password_2) {
                         ///Verifico que la contraseña ingresada sea valida y que no caduco
                         ChangePwdService.validatePassword(vm.email, vm.password, function (data) {
-                            if (data != "true") {
-                                ChangePwdService.savePassword(data.user, vm.password_1, function (result) {
-                                    if (result == "true") {
+                            console.log(vm.password);
+                            console.log(data);
+                            if (data.result) {
+                                ChangePwdService.savePassword(data.user, vm.password_1, function (data2) {
+                                    if (data2.result) {
                                         toastr.success('La contrase&ntilde;a fue modificada satisfactoriamente');
                                     }
                                     else {
@@ -63,7 +65,7 @@
                                 });
                             }
                             else {
-                                toastr.error(data.message);
+                                toastr.error('Usuario o contraseña no validos');
                             }
                         });
                     }
@@ -140,7 +142,7 @@
                 {
                     'function': 'resetPassword',
                     'user': user,
-                    'password': password,
+                    'new_password': password,
                     'changepwd': '0'
                 })
                 .success(function (data) {
@@ -150,19 +152,6 @@
                     }
                 })
                 .error()
-        }
-
-        /**
-         * Retorno la cantidad de minutos entre dos fechas
-         * @param dateFrom
-         * @param dateTo
-         * @returns {number}
-         */
-        function getMinutes(dateFrom, dateTo) {
-            var diff = Math.abs(dateTo - dateFrom);
-            var minutes = Math.floor((diff/1000)/60);
-
-            return minutes;
         }
     }
 

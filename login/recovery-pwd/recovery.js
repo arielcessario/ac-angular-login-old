@@ -55,10 +55,10 @@
                         if(data.user != "null") {
                             var new_password = GenerateRandomPassword();
                             //console.log(new_password);
-                            RecoveryService.resetPassword(data.user, new_password, function(result){
-                                if(result == "true") {
+                            RecoveryService.resetPassword(data.user, new_password, function(data2){
+                                console.log(data2);
+                                if(data2.result) {
                                     //sendPassword($scope.signup.email, new_password);
-
                                     RecoveryService.sendPassword($scope.signup.email, new_password, function(enviado) {
                                         //console.log(enviado);
                                         if(enviado == "true") {
@@ -87,23 +87,6 @@
           
             }
         }
-
-        /*
-      function sendPassword(email, new_password) {
-          return $http.post('./recovery-pwd/send-pwd.php',
-              {
-                  'email': email,
-                  'nombre': 'playground',
-                  'mensaje': new_password,
-                  'asunto': 'Password'
-              })
-              .success(function (data) {
-                  console.log(data);
-              })
-              .error(function (data) {
-                  //console.log('Error');
-              })
-      }*/
 
     }
 

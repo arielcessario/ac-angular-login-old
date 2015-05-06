@@ -30,7 +30,6 @@ if ($decoded->function == 'login') {
 
 function login($username, $password)
 {
-
     $db = new MysqliDb();
     $db->where("user_name", $username);
 
@@ -46,26 +45,19 @@ function login($username, $password)
             'token' => $token);
         $db->where('usuario_id', $userId);
 
-
         $results[0]['token'] = $token;
 
         if ($db->update('usuarios', $data)) {
-            $response = ['response' => true, 'user' => json_encode($results[0])];
-            echo json_encode($response);
+            $response = ['response' => true, 'user' => json_encode($results[0]), 'pwd' => $password, 'hash' => $hash, 'pwd_info' => password_get_info($hash)];
         } else {
-            $response = ['response' => false];
-            echo json_encode($response);
+            $response = ['response' => false, 'pwd' => $password, 'hash' => $hash, 'pwd_info' => password_get_info($hash)];
         }
-
-
+        echo json_encode($response);
     } else {
-        $response = ['response' => false];
+        $response = ['response' => false, 'pwd' => $password, 'hash' => $hash, 'pwd_info' => password_get_info($hash)];
         echo json_encode($response);
     }
-
-
 }
-
 
 function checkLastLogin($userid)
 {
@@ -75,10 +67,8 @@ function checkLastLogin($userid)
     if ($db->count < 1) {
         $db->rawQuery('update usuarios set token ="" where usuario_id =' . $userid);
         echo(json_encode(false));
-
-
-    } else {
-
+    }
+    else {
         $diff = $results[0]["diferencia"];
 
         if (intval($diff) < 12960) {
@@ -86,10 +76,8 @@ function checkLastLogin($userid)
         } else {
             $db->rawQuery('update usuarios set token ="" where usuario_id =' . $userid);
             echo(json_encode(false));
-
         }
     }
-
 }
 
 
@@ -111,7 +99,6 @@ function create($user)
         echo json_encode(true);
     } else {
         echo json_encode(false);
-
     }
 }
 
@@ -147,9 +134,9 @@ function resetPassword($user, $new_password, $changepwd)
 
     $db->where('usuario_id', $user_decoded->usuario_id);
     if ($db->update('usuarios', $data)) {
-        echo json_encode(true);
+        echo json_encode(['result' => true, 'new_password' => $new_password, 'password_hashed' => $password, 'pwd_info' => password_get_info($password)]);
     } else {
-        echo json_encode(false);
+        echo json_encode(['result' => false, 'new_password' => $new_password, 'password_hashed' => $password, 'pwd_info' => password_get_info($password)]);
     }
 }
 
@@ -165,13 +152,11 @@ function getUserByEmailAndPassword($email, $password)
     $hash = $results[0]['password'];
 
     if (password_verify($password, $hash)) {
-        //Serializo el resultado
-        $response = ['user' => json_encode($results[0])];
+        $response = ['user' => json_encode($results[0]), 'result' => true, 'password' => $password, 'hash' => $hash, 'pwd_info' => password_get_info($hash)];
     }
     else {
-        $response = ['user' => json_encode(null)];
+        $response = ['user' => json_encode(null), 'result' => false, 'password' => $password, 'hash' => $hash, 'pwd_info' => password_get_info($hash)];
     }
-
     //retorno el resultado serializado
     echo json_encode($response);
 }

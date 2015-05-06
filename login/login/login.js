@@ -5,28 +5,24 @@
 
     var destinationWebsite = "http://192.185.67.199/~arielces/playground/redirect/#/verify-login/";
 
-
-    angular.module('login.login',
-        ['ngRoute',
-            'ngCookies'])
-
+    //angular.module('login.login', ['ngRoute', 'ngCookies', 'toastr'])
+    angular.module('login.login', ['ngRoute', 'ngCookies'])
         .config(['$routeProvider', function ($routeProvider) {
             $routeProvider.when('/login/:action', {
                 templateUrl: './login/login.html',
                 controller: 'LoginCtrl'
             });
-
             $routeProvider.when('/login', {
                 templateUrl: './login/login.html',
                 controller: 'LoginCtrl'
             });
         }])
-
         .controller('LoginCtrl', LoginCtrl)
         .factory('LoginService', LoginService);
 
     //Injects
-    LoginCtrl.$inject = ['LoginService', '$cookieStore', '$window', '$routeParams']
+    //LoginCtrl.$inject = ['LoginService', '$cookieStore', '$window', '$routeParams', 'toastr']
+    LoginCtrl.$inject = ['LoginService', '$cookieStore', '$window', '$routeParams'];
     LoginService.$inject = ['$http', '$cookieStore', '$window'];
 
 
@@ -34,7 +30,6 @@
     function LoginCtrl(LoginService, $cookieStore, $window, $routeParams) {
         // Functions
         var vm = this;
-
 
         // Variables
 
@@ -46,7 +41,6 @@
 
         //Implementations
         function login() {
-            //console.log(vm.username);
             LoginService.login(vm.username, vm.password);
         }
 
@@ -64,17 +58,12 @@
                 globals.userid !== undefined &&
                 globals.userid !== '') {
                 LoginService.checkLastLogin(globals.userid, function (data) {
-                    //console.log();
-                    //console.log(data);
-
                     if (data) {
                         // Redirecciona a la aplicación verdadera
                         //console.log('true');
                         $window.location.href = destinationWebsite + globals.verification + '/' + globals.userid;
                     }
                 });
-
-
             }
         }
     }
@@ -92,18 +81,20 @@
         return service;
 
 
-        //Functions
+         //Functions
         function login(username, password, callback) {
             return $http.post('./login-api/user.php',
                 {'function': 'login', 'username': username, 'password': password})
                 .success(function (data) {
-                    if (data) {
+                    if (data.response) {
                         var user = JSON.parse(data.user);
-                        //console.log(data);
 
-                        //console.log(user);
                         setLogged(user.user_name, user.usuario_id, user.rol_id, user.token);
                     }
+                    else {
+                        console.log("Contraseña o usuario invalido");
+                    }
+                    console.log(data);
                 })
                 .error()
         }
@@ -119,8 +110,6 @@
                     }
                 })
                 .error()
-
-
         }
 
         function setLogged(username, userid, rol, verification) {
@@ -138,8 +127,6 @@
         function checkLogged() {
 
         }
-
     }
-
 
 })();
