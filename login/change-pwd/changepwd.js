@@ -47,16 +47,19 @@
         function changePassword() {
 
             ///Valido que ingrese las 3 contraseñas
-            if(vm.email !== '' && vm.password !== '' && vm.password_1 !== '' && vm.password_2 !== '') {
-                if (ValidateEmail(vm.email)) {
-                    if(vm.password_1 === vm.password_2) {
+            if(vm.email.trim().length > 0 && vm.password.trim().length > 0 && vm.password_1.trim().length > 0 && vm.password_2.trim().length > 0) {
+                if (ValidateEmail(vm.email.trim())) {
+                    if(vm.password_1.trim() === vm.password_2.trim()) {
                         ///Verifico que la contraseña ingresada sea valida y que no caduco
-                        ChangePwdService.validatePassword(vm.email, vm.password, function (data) {
-                            console.log(vm.password);
-                            console.log(data);
+                        ChangePwdService.validatePassword(vm.email.trim(), vm.password.trim(), function (data) {
+                            //console.log(data);
                             if (data.result) {
-                                ChangePwdService.savePassword(data.user, vm.password_1, function (data2) {
+                                ChangePwdService.savePassword(data.user, vm.password_1.trim(), function (data2) {
                                     if (data2.result) {
+                                        vm.email = '';
+                                        vm.password = '';
+                                        vm.password_1 = '';
+                                        vm.password_2 = '';
                                         toastr.success('La contrase&ntilde;a fue modificada satisfactoriamente');
                                     }
                                     else {

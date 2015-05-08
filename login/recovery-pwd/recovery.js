@@ -31,45 +31,41 @@
     //function RecoveryCtrl(RecoveryService, $scope, $location, toastr, $http) {
     function RecoveryCtrl(RecoveryService, $scope, $location, toastr) {
         var vm = this;
-
         // Variables
-        $scope.signup = {
-            email: ''
-        };
+        vm.email= '';
 
         // Function Declarations
         //asigno la funcion a una variable
-        $scope.sendMail = sendMail;
+        vm.sendMail = sendMail;
 
         /**
          * Envia un mail para recuperar la Password o bien para tener una nueva
          */
         function sendMail(){
 
-            if($scope.signup.email == '') {
+            if(vm.email.trim().length == 0) {
                 toastr.error('Por favor ingrese una direcci&oacute;n de Mail');
             }
             else {
-                if (ValidateEmail($scope.signup.email)) {
-                    RecoveryService.getUser($scope.signup.email, function(data){
+                if (ValidateEmail(vm.email.trim())) {
+                    RecoveryService.getUser(vm.email.trim(), function(data){
                         if(data.user != "null") {
                             var new_password = GenerateRandomPassword();
                             //console.log(new_password);
                             RecoveryService.resetPassword(data.user, new_password, function(data2){
-                                console.log(data2);
+                                //console.log(data2);
                                 if(data2.result) {
                                     //sendPassword($scope.signup.email, new_password);
-                                    RecoveryService.sendPassword($scope.signup.email, new_password, function(enviado) {
+                                    RecoveryService.sendPassword(vm.email.trim(), new_password, function(enviado) {
                                         //console.log(enviado);
                                         if(enviado == "true") {
-                                            $scope.signup.email = '';
+                                            vm.email = '';
                                             toastr.success('Se envio la contrase&ntilde;a');
                                         }
                                         else {
                                             toastr.error('Se produjo un error al enviar el mail');
                                         }
                                     });
-
                                 }
                                 else {
                                     toastr.error('Se produjo un error al recuperar la contrase&ntilde;a');

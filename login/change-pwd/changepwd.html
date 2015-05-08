@@ -1,38 +1,36 @@
-<div id="" ng-controller="ChangePwdCtrl as changePwdCtrl">
-    <div class="panel panel-default">
-        <div class="panel-body">
-            <div class="text-center">
-                <img src="./img/recovery.png" class="login" height="50">
+<div class="title ng-scope">
+    <img src="./img/recovery.png" class="login" height="30">
+    <h3 class="text-center">Cambie su contrase&ntilde;a</h3>
+</div>
+<div class="v-spacer ng-scope"></div>
 
-                <h3 class="text-center">Cambie su contrase&ntilde;a</h3>
+<form ng-controller="ChangePwdCtrl as changePwdCtrl" name="changeForm" class="ng-pristine ng-scope ng-invalid ng-invalid-required ng-valid-maxlength">
+    <p>Ingrese su direcci&oacute;n de email y su contrase&ntilde;a actual.</p>
+    <div class="form-flex">
+        <div>
+            <input type="email" id="email" placeholder="example@gmail.com" name="email" ng-model="changePwdCtrl.email" required class="ng-pristine ng-untouched ng-invalid ng-invalid-required ng-valid-maxlength"/>
+            <br>
+            <label for="email">Introduzca su Email</label>
+        </div>
+        <div>
+            <input type="password" id="password" ng-model="changePwdCtrl.password" name="password" required class="ng-pristine ng-untouched ng-invalid ng-invalid-required ng-valid-maxlength"/>
+            <br>
+            <label for="password">Contrase&ntilde;a actual</label>
+        </div>
+        <div >
+            <input type="password" id="password_1" ng-model="changePwdCtrl.password_1" name="password_1" required class="ng-pristine ng-untouched ng-invalid ng-invalid-required ng-valid-maxlength"/>
+            <br>
+            <label for="password_1">Nueva contrase&ntilde;a</label>
+        </div>
+        <div class="form-group">
+            <input type="password" id="password_2" ng-model="changePwdCtrl.password_2" name="password_2" required class="ng-pristine ng-untouched ng-invalid ng-invalid-required ng-valid-maxlength"/>
+            <br>
+            <label for="password_2">Repetir contrase&ntilde;a</label>
+        </div>
 
-                <p>Ingrese su direcci&oacute;n de email y su contrase&ntilde;a actual.</p>
-
-                <div class="panel-body">
-                    <form class="form">
-                        <div class="form-group">
-                            <label class="label">Introduzca su Email:</label>
-                            <input type="email" placeholder="example@gmail.com" name="email" ng-model="changePwdCtrl.email" required />
-                        </div>
-                        <div class="form-group">
-                            <label class="label">Contrase&ntilde;a actual:</label>
-                            <input type="password" ng-model="changePwdCtrl.password" placeholder="Old Password"/>
-                        </div>
-                        <div class="form-group">
-                            <label class="label">Nueva contrase&ntilde;a:</label>
-                            <input type="password" ng-model="changePwdCtrl.password_1" placeholder="New Password"/>
-                        </div>
-                        <div class="form-group">
-                            <label class="label">Repetir contrase&ntilde;a:</label>
-                            <input type="password" ng-model="changePwdCtrl.password_2" placeholder="Repeat Password"/>
-                        </div>
-
-                        <div class="form-group">
-                            <input type="button" class="btn" id="btn-change" ng-click="changePwdCtrl.changePassword()" value="Guardar contrase&ntilde;a"/>
-                        </div>
-                    </form>
-                </div>
-            </div>
+        <div class="btn ng-scope">
+            <input type="button" class="relieve-2 btn-add btn-medium" ng-click="changePwdCtrl.changePassword()" value=""/>
+            <label>Guardar contrase&ntilde;a</label>
         </div>
     </div>
-</div>
+</form>
