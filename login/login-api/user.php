@@ -15,7 +15,6 @@ $decoded = json_decode($data);
 
 if ($decoded->function == 'login') {
     login($decoded->username, $decoded->password);
-
 } else if ($decoded->function == 'checkLastLogin') {
     checkLastLogin($decoded->userid);
 } else if ($decoded->function == 'create') {
@@ -26,6 +25,8 @@ if ($decoded->function == 'login') {
     resetPassword($decoded->user, $decoded->new_password, $decoded->changepwd);
 } else if ($decoded->function == 'getUserByEmailAndPassword') {
     getUserByEmailAndPassword($decoded->email, $decoded->password);
+} else if ($decoded->function == 'ExisteUsuario') {
+    ExisteUsuario($decoded->username);
 }
 
 function login($username, $password)
@@ -38,19 +39,25 @@ function login($username, $password)
     $hash = $results[0]['password'];
 
     if (password_verify($password, $hash)) {
-        $userId = $results[0]['usuario_id'];
-        $token = password_hash(rand(), PASSWORD_BCRYPT);
-        $token = str_replace('/','',$token);
-        $data = array('last_login' => $db->now(),
-            'token' => $token);
-        $db->where('usuario_id', $userId);
+        $changepwd = $results[0]['changepwd'];
+        if($changepwd == '1') {
+            $response = ['response' => true, 'changepwd' => true, 'user' => json_encode($results[0])];
+        }
+        else {
+            $userId = $results[0]['usuario_id'];
+            $token = password_hash(rand(), PASSWORD_BCRYPT);
+            $token = str_replace('/','',$token);
+            $data = array('last_login' => $db->now(),
+                'token' => $token);
+            $db->where('usuario_id', $userId);
 
-        $results[0]['token'] = $token;
+            $results[0]['token'] = $token;
 
-        if ($db->update('usuarios', $data)) {
-            $response = ['response' => true, 'user' => json_encode($results[0]), 'pwd' => $password, 'hash' => $hash, 'pwd_info' => password_get_info($hash)];
-        } else {
-            $response = ['response' => false, 'pwd' => $password, 'hash' => $hash, 'pwd_info' => password_get_info($hash)];
+            if ($db->update('usuarios', $data)) {
+                $response = ['response' => true, 'user' => json_encode($results[0]), 'pwd' => $password, 'hash' => $hash, 'pwd_info' => password_get_info($hash)];
+            } else {
+                $response = ['response' => false, 'pwd' => $password, 'hash' => $hash, 'pwd_info' => password_get_info($hash)];
+            }
         }
         echo json_encode($response);
     } else {
@@ -156,6 +163,24 @@ function getUserByEmailAndPassword($email, $password)
     }
     else {
         $response = ['user' => json_encode(null), 'result' => false, 'password' => $password, 'hash' => $hash, 'pwd_info' => password_get_info($hash)];
+    }
+    //retorno el resultado serializado
+    echo json_encode($response);
+}
+
+function ExisteUsuario($username)
+{
+    //Instancio la conexion con la DB
+    $db = new MysqliDb();
+    $db->where("user_name", $username);
+    //Que me retorne el usuario filtrando por email
+    $results = $db->get("usuarios");
+
+    if($results != null) {
+        $response = ['noExiste' => true];
+    }
+    else {
+        $response = ['noExiste' => false];
     }
     //retorno el resultado serializado
     echo json_encode($response);

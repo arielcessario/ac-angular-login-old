@@ -1,7 +1,6 @@
 <div id="" >
     <div class="title ng-scope">
-        <img src="./img/recovery.png" class="login" height="30">
-        <h3>¿Olvido su contrase&ntilde;a?</h3>
+        <h1>¿Olvido su contrase&ntilde;a?</h1>
     </div>
     <div class="v-spacer ng-scope"></div>
 
@@ -9,15 +8,15 @@
         <p>Por favor, introduzca su direcci&oacute;n de email y nuestro sistema le enviar&aacute; su nueva contrase&ntilde;a de acceso.</p>
         <br><br>
         <div class="form-flex">
-            <div>
-                <input type="email" id="email" name="email" ng-model="recoveryCtrl.email" required class="ng-pristine ng-invalid ng-invalid-required ng-valid-maxlength ng-touched"/>
+            <div class="full-width">
+                <input type="email" id="email" name="email" ng-model="recoveryCtrl.email" required class="full-width"/>
                 <br>
                 <label for="email">Introduzca su Email</label>
             </div>
-            <div class="btn ng-scope">
-                <input type="button" class="relieve-2 btn-add btn-medium" ng-click="recoveryCtrl.sendMail()" value=""/>
-                <label>Enviar mi contrase&ntilde;a</label>
-            </div>
+        </div>
+        <div class="btn ng-scope">
+            <input type="button" class="relieve-2 btn-ok btn-medium" ng-click="recoveryCtrl.sendMail()" value=""/>
+            <label>Enviar mi contrase&ntilde;a</label>
         </div>
     </form>
 </div>
