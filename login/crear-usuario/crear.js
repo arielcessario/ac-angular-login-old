@@ -36,7 +36,7 @@
                     && (vm.password_repeat.trim().length >= 6 && vm.password_repeat.trim().length <= 25)) {
                     if(vm.password.trim() === vm.password_repeat.trim()) {
                         CrearService.ExisteUsuario(vm.username, function(data){
-                            if(data.noExiste) {
+                            if(data.user == "null") {
                                 CrearService.Create(vm.nombre, vm.apellido, vm.username, vm.password, function(data){
                                     if(data){
                                         toastr.success('Usuario creado con éxito');
@@ -49,7 +49,7 @@
                                 });
                             }
                             else {
-                                toastr.error('El usuario que trata de crear ya existe. Ingrese otro nombre de usuario');
+                                toastr.warning('El usuario que trata de crear ya existe. Ingrese otro nombre de usuario');
                             }
                         });
                     }

@@ -18,6 +18,9 @@
                 <label for="login-pass">Password</label>
             </div>
         </div>
+        <div ng-if="loginCtrl.changePwd == '1'">
+            <p>Por favor cambie la contrase&ntilde;a temporal</p>
+        </div>
         <div style="display:flex; justify-content:space-between;">
             <div class="btn ng-scope">
                 <input type="button" class="relieve-2 btn-ok btn-medium" ng-click="loginCtrl.login()" value=""/>

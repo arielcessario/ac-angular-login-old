@@ -5,7 +5,6 @@
   'use strict';
 
   angular.module('login.recovery', ['ngRoute', 'toastr'])
-
       .config(['$routeProvider', function ($routeProvider) {
           $routeProvider.when('/recovery', {
               templateUrl: './recovery-pwd/recovery.html',
@@ -14,6 +13,7 @@
       }])
       .controller('RecoveryCtrl', RecoveryCtrl)
       .factory('RecoveryService', RecoveryService);
+
 
     //Injects
     //RecoveryCtrl.$inject = ['RecoveryService', '$scope', '$location', 'toastr', '$http'];
@@ -94,7 +94,7 @@
     function ValidateEmail(email)
     {
         var re = /\S+@\S+\.\S+/;
-        return re.test(email)
+        return re.test(email);
     }
 
     /**

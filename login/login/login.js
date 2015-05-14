@@ -33,6 +33,7 @@
         // Variables
         vm.username = '';
         vm.password = '';
+        vm.changePwd = '0';
 
         // Functions declaration
         vm.login = login;
@@ -48,13 +49,19 @@
             if(vm.username.trim().length > 0 && vm.password.trim().length > 0) {
                 if(vm.password.trim().length >= 6 && vm.password.trim().length <= 25) {
                     LoginService.login(vm.username, vm.password, function (data){
-                        if(!data.response) {
-                            toastr.error('Usuario o contraseña invalido');
+                        if(data.response) {
+                            var user = JSON.parse(data.user);
+                            vm.changePwd = user.changepwd;
+                            if(user.changepwd === '0') {
+                                //$window.location.href = destinationWebsite;
+                                LoginService.setLogged(user.user_name, user.usuario_id, user.rol_id, user.token);
+                            }
+                            else {
+                                toastr.warning('Por favor cambie la contraseña temporal');
+                            }
                         }
                         else {
-                            if(data.changepwd) {
-                                $window.location.href = "http://192.185.67.199/~arielces/playground/login/#/changepwd";
-                            }
+                            toastr.error('Usuario o contraseña invalido');
                         }
                     });
                 }
@@ -85,8 +92,6 @@
                     $cookieStore.remove('appname.login.userLogged');
                 }
             }
-
-
             var globals = $cookieStore.get('appname.login.userLogged');
             //console.log(globals);
             if (globals !== undefined &&
@@ -112,9 +117,9 @@
         service.login = login;
         service.checkLogged = checkLogged;
         service.checkLastLogin = checkLastLogin;
+        service.setLogged = setLogged;
 
         return service;
-
 
          //Functions
         function login(username, password, callback) {
@@ -122,15 +127,8 @@
                 {'function': 'login', 'username': username, 'password': password})
                 .success(function (data) {
                     if (data.response) {
-                        if(data.changepwd) {
-                            console.log("cambie la contraseña temporal");
-                        }
                         var user = JSON.parse(data.user);
-
-                        setLogged(user.user_name, user.usuario_id, user.rol_id, user.token);
-                    }
-                    else {
-                        console.log("Contraseña o usuario invalido");
+                        //setLogged(user.user_name, user.usuario_id, user.rol_id, user.token);
                     }
                     console.log(data);
                     callback(data);
